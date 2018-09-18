@@ -19,4 +19,4 @@ else
   print " #{your_name}, Ваш идеальный вес составляет #{ideal_weight} кг!!!"
 end
 
-puts
+
