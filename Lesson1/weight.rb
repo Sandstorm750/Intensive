@@ -14,7 +14,9 @@ your_height = gets.to_i
 ideal_weight = your_height - 110
 
 if ideal_weight <= 0
-	print " #{your_name}, Ваш вес уже оптимален!"
+  print " #{your_name}, Ваш вес уже оптимален!"
 else
-	print " #{your_name}, Ваш идеальный вес составляет #{ideal_weight} кг!!!"
+  print " #{your_name}, Ваш идеальный вес составляет #{ideal_weight} кг!!!"
 end
+
+puts
