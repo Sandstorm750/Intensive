@@ -14,49 +14,37 @@ if month > 12 || month < 1
     exit
 end
 
-puts "Пожалуйста введите число."
-number = gets.to_i
+months = [ 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
-months = {1 => 31, 2 => 28, 3 => 31, 4 => 30, 5 => 31, 6 => 30,
-  7 => 31, 8 => 31, 9 => 30, 10 => 31, 11 => 30, 12 => 31}
-
-if
-  year % 4 == 0
-  months[2] = 29
+if year % 4 == 0 && year % 400 != 0
+    puts "Год не високосный!"
+elsif year % 4 == 0 || year % 400 == 0
+  months[2] += 1
   puts "Год високосный!"
- else
+else
     puts "Год не високосный!"
 end
 
-#p months
+puts "Пожалуйста введите число."
+number = gets.to_i
 
-months.each do |key, value|
-  key = month
-  if number > value || number < 1
-    puts "Неверно указано число."
-    exit
-  end
+if number > months[month]|| number <= 0
+  puts "Неверно указано число"
+  exit
 end
 
 puts "Ваша дата: #{number}.#{month}.#{year}г. !!!"
 
 box = []
-months.each do|key, value|
-  if key < month
-    box << value
-  end
-end
-#p box
+index = 1
 
-amount = 0
-index = 0
-
-for days in box
-  amount = amount + days
+while index < month
+  box << months[index]
   index += 1
 end
 
-#puts amount
+#p box
+amount = box.sum
 
 result = amount + number
 
