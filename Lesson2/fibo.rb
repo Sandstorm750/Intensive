@@ -1,17 +1,12 @@
 # 3. Заполнить массив числами фибоначчи до 100
 
-fibo = []
-a = 0
-b = 1
+fibo = [ 0, 1]
 
-while a < 100 && b < 100
-  fibo << a
-  fibo << b
+while fibo.last < 100
+  d = fibo[-1] + fibo[-2]
+  fibo << d
+  end
 
-  a = a + b
-  b = a + b
-  
-end
-
-puts fibo
+fibo.pop # Пришлось сделать так, т.к. не смотря на "fibo.last < 100" последнее число было 144...
+p fibo
 

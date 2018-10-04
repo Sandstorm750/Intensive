@@ -18,15 +18,6 @@ months = {'January' => 31,
 }
 
 thirty = []
-
-months.each do |key, value|
-  
-  if value==30
-  thirty << key
-  #p thirty
-  end
-  
-end
-
+months.each {|key, value|thirty << key if value == 30}
 puts thirty
 
