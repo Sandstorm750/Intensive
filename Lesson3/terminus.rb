@@ -15,16 +15,12 @@ class Train
     @speed = 0
   end
 
-  def speedup
-    while @speed < 80
-    @speed += 1
-    end
+  def speedup(speedup) # =item.to_i
+    @speed += speedup
   end
 
-  def deceleration
-    while @speed >= 0
-    @speed -= 1
-    end
+  def deceleration(deceleration) # =item.to_i
+    @speed -= deceleration
   end
 
   def current_speed
@@ -33,15 +29,17 @@ class Train
 
   def add_wagon
     if speed == 0
-    @wagons_number += 1
-    else puts "Это невозможно сделать в движении!"
+      @wagons_number += 1
+    else
+      puts "Это невозможно сделать в движении!"
     end
   end
 
   def unpin_wagon
     if speed == 0
-    @wagons_number -= 1
-    else puts "Это невозможно сделать в движении!"
+      @wagons_number -= 1
+    else
+      puts "Это невозможно сделать в движении!"
     end
   end
 
@@ -56,25 +54,30 @@ class Train
   end
 
   def current_station
-    puts @current_station.station
+    puts @current_station.name
+  end
+
+  def station_index
+    @station_index = @my_route.stations.index(@current_station)
+    puts @station_index
   end
 
   def next_station
     @current_station = @my_route.stations[@my_route.stations.index(@current_station) + 1]
-    puts @current_station.station
+    puts @current_station.name
   end
   def previous_station
     @current_station = @my_route.stations[@my_route.stations.index(@current_station) - 1]
-    puts @current_station.station
+    puts @current_station.name
   end  
 end
 
 class Station
 
-  attr_reader :station
+  attr_reader :name
 
-  def initialize(station)
-    @station = station
+  def initialize(name)
+    @name = name
     @train_list = []
   end
 
@@ -93,11 +96,8 @@ class Station
   end
   
   def type_list(type)
-    @train_list.each do |train|
-      if train.type == type
-        puts train
-      end
-    end
+    train_type = @train_list.select {|train| train.type == type}
+    puts train_type
   end
 end
 
@@ -106,13 +106,11 @@ class Route
 attr_reader :station
 
   def initialize(departure_station, destination_station)
-    @departure_station = departure_station
-    @destination_station = destination_station
-    @stations = []
+    @stations = [departure_station, destination_station]
   end
 
   def get_station(station)
-    @stations << station
+    @stations.insert(-2, station)
   end
 
   def delete_station(station)
@@ -120,9 +118,7 @@ attr_reader :station
   end
 
   def all_route
-    @stations.unshift @departure_station
-    @stations << @destination_station
-    @stations.each {|stopping_point| puts stopping_point.station}
+    @stations.each {|stopping_point| puts stopping_point.name}
   end
 
   def stations
