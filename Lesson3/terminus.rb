@@ -56,39 +56,37 @@ class Train
   def current_station
     @current_station
   end
-  def show_current_station
-    @current_station.name
-  end
-
+  
   def station_index
     @station_index = @my_route.stations.index(@current_station)
-    puts @station_index
   end
 
   def next_station
-    @next_station = @my_route.stations[@my_route.stations.index(@current_station) + 1]
-    @next_station.name
+    @next_station = @my_route.stations[self.station_index + 1]
+    @next_station
   end
   def previous_station
-    @previous_station = @my_route.stations[@my_route.stations.index(@current_station) - 1]
-    @previous_station.name
+    @previous_station = @my_route.stations[self.station_index - 1]
+    @previous_station
   end
 
   def move_forward
+    @current_station.send_train(self)
     self.next_station
-    @current_station = @next_station
     puts "Движемся на следующую станцию #{@next_station.name}."
+    @next_station.get_train(self)
   end
 
   def return_back
+    @current_station.send_train(self)
     self.previous_station
-    @current_station = @previous_station
     puts "Возвращаемся на предыдущую станцию #{@previous_station.name}."
+    @previous_station.get_train(self)
   end
 
   def show_stations
     puts "Предыдущая станция: #{self.previous_station}."
-    puts "Текущая станция: #{self.show_current_station}."
+    puts "Текущая станция: #{self.current_station}."
     puts "Следующая станция: #{self.next_station}."
   end
 end
