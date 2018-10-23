@@ -15,11 +15,11 @@ class Train
     @speed = 0
   end
 
-  def speedup(speedup) # =item.to_i
+  def speedup(speedup)
     @speed += speedup
   end
 
-  def deceleration(deceleration) # =item.to_i
+  def deceleration(deceleration)
     @speed -= deceleration
   end
 
@@ -49,45 +49,39 @@ class Train
 
   def get_route(route)
     @my_route = route
-    @current_station = route.stations[0]
-    @current_station.get_train(self)
+    @station_index = 0
+    current_station.get_train(self)
   end
 
   def current_station
-    @current_station
-  end
-  
-  def station_index
-    @station_index = @my_route.stations.index(@current_station)
+    @my_route.stations[@station_index]
   end
 
   def next_station
-    @next_station = @my_route.stations[self.station_index + 1]
-    @next_station
+    @next_station = @my_route.stations[@station_index + 1]
+    puts @next_station
   end
   def previous_station
-    @previous_station = @my_route.stations[self.station_index - 1]
-    @previous_station
+    if @station_index == 0
+      @previous_station = nil
+    else
+      @previous_station = @my_route.stations[@station_index - 1]
+      puts @previous_station
+    end
   end
 
   def move_forward
-    @current_station.send_train(self)
-    self.next_station
-    puts "Движемся на следующую станцию #{@next_station.name}."
-    @next_station.get_train(self)
+    return if current_station == @my_route.stations.last
+    current_station.send_train(self)
+    @station_index += 1    
+    current_station.get_train(self)
   end
-
   def return_back
-    @current_station.send_train(self)
-    self.previous_station
-    puts "Возвращаемся на предыдущую станцию #{@previous_station.name}."
-    @previous_station.get_train(self)
-  end
-
-  def show_stations
-    puts "Предыдущая станция: #{self.previous_station}."
-    puts "Текущая станция: #{self.current_station}."
-    puts "Следующая станция: #{self.next_station}."
+    if previous_station
+      current_station.send_train(self)
+      @station_index -= 1
+      current_station.get_train(self)
+    end
   end
 end
 
@@ -137,7 +131,7 @@ attr_reader :station
   end
 
   def all_route
-    @stations.each {|stopping_point| puts stopping_point.name}
+    @stations.each {|stopping_point| puts stopping_point}
   end
 
   def stations
