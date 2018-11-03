@@ -1,8 +1,8 @@
 
 class CargoWagon < Wagon
 
-  def initialize(number, release_year, type = 'cargo')
-    super(number, release_year, type)
+  def initialize(number, type = 'cargo')
+    super(number, type)
     @type = CARGO
   end
 
