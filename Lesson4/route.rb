@@ -1,10 +1,14 @@
 
+require_relative 'station.rb'
+
 class Route
 
 attr_reader :station
 
   def initialize(departure_station, destination_station)
-    @stations = [departure_station, destination_station]
+    if departure_station.class == Station && destination_station.class == Station
+      @stations = [departure_station, destination_station]
+    end
   end
 
   def get_station(station)
