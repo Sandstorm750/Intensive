@@ -5,10 +5,9 @@ class Route
 
 attr_reader :station, :stations, :route_number
 
-  def initialize(route_number, departure_station, destination_station)
+  def initialize(departure_station, destination_station)
     if departure_station.class == Station && destination_station.class == Station
       @stations = [departure_station, destination_station]
-      @route_number = route_number
     end
   end
 

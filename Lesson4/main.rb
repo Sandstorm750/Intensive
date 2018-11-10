@@ -18,21 +18,20 @@ class Main
     @trains = []
     @station_list = []
     @wagon_list = []
-    @routes = []
-    #@stations = []
+    @routes = []    
   end
 
   def start
 
     loop do
-      puts "Выберите объект для создания или действие, введя его номер из списка:
+      puts "Выберите действие, введя его номер из списка:
 
-        1. Поезд
-        2. Вагон
-        3. Станция
-        4. Маршрут
-        5. Добавить станцию в Маршрут
-        6. Удалить станцию из Маршрута
+        1. Создать Поезд
+        2. Создать Вагон
+        3. Создать Станцию
+        4. Создать Маршрут
+        5. Добавить Станцию в Маршрут
+        6. Удалить Станцию из Маршрута
         7. Назначить Маршрут для Поезда
         8. Добавить Вагон к Поезду
         9. Отцепить Вагон от Поезда
@@ -92,13 +91,12 @@ class Main
     type = gets.chomp.to_i
 
     if type == 1
-      train = CargoTrain.new(number, :cargo)
+      @trains << CargoTrain.new(number, :cargo)
     elsif type == 2
-      train = PassengerTrain.new(number, :passenger)
+      @trains << PassengerTrain.new(number, :passenger)
     else return puts "Неверно указан тип поезда."
     end
 
-    @trains << train
     p @trains
   end
 
@@ -117,13 +115,12 @@ class Main
     type = gets.chomp.to_i
 
     if type == 1
-      wagon = CargoWagon.new(number, :cargo)
+      @wagon_list << CargoWagon.new(number, :cargo)
     elsif type == 2
-      wagon = PassengerWagon.new(number, :passenger)
+      @wagon_list << PassengerWagon.new(number, :passenger)
     else return puts "Неверно указан тип вагона."
     end
 
-    @wagon_list << wagon
     p @wagon_list
   end
 
@@ -136,8 +133,8 @@ class Main
     return puts "Станция с таким названием уже существует"
     elsif name == ""
       return puts "Название станции не введено"
-    else station = Station.new(name)
-      @station_list << station
+    else
+      @station_list << Station.new(name)
     end    
     
     puts @station_list
@@ -146,53 +143,72 @@ class Main
   # 4 - Создаём маршрут
   def create_route
 
-    puts "Задайте номер маршрута:"      
-    route_number = gets.chomp.to_i
+    puts "Выберите Станцию отправления и Станцию назначения из списка:"
 
-    if @routes.find {|route| route.route_number == route_number}
-      return puts "Маршрут с таким номером уже существует"
+    @station_list.each_with_index do |station, index|
+      puts "   #{index + 1}:   #{station.name}"
     end
 
-    puts "Выберите станцию отправления:"      
-    st1 = gets.chomp.to_s
-    if departure_station = @station_list.find{|station| station.name == st1}
-    else return puts "Неверно выбрано название станции"
+    puts "Станция Отправления:"
+    st1 = gets.chomp.to_i
+
+    if st1 > @station_list.length || st1 <= 0
+      return puts "Неверно выбран номер Станции"
+    else
+      departure_station = @station_list[st1 - 1]
+      puts departure_station #@station_list[st1 - 1]
     end
-    
-    puts "Выберите станцию назначения:"      
-    st2 = gets.chomp.to_s
-    if destination_station = @station_list.find{|station| station.name == st2}
-    else return puts "Неверно выбрано название станции"
+
+    puts "Станция Назначения:"
+    st2 = gets.chomp.to_i
+
+    if st2 > @station_list.length || st2 <= 0
+      return puts "Неверно выбран номер Станции"
+    else
+      destination_station = @station_list[st2 - 1]
+      puts destination_station      
     end
 
     if destination_station == departure_station
-      return puts "Эта Станция уже выбрана как Станция Отправления"
+      return puts "Эта Станция уже была выбрана как Станция Отправления"
     end
     
-    @route = Route.new(route_number, departure_station, destination_station)
-    @routes << @route
-    
-    p @routes
+    @routes << Route.new(departure_station, destination_station)
+    puts @routes
   end
   
   # 5 - Добавляем станцию в маршрут
   def add_station
 
-    puts "Укажите номер Маршрута:"
+    puts "Выберите номер Маршрута из списка:"
+
+    @routes.each_with_index do |route, index|
+      puts "  #{index + 1}:  #{route.stations.first.name} - #{route.stations.last.name}"
+    end
+
     r_num = gets.chomp.to_i
-    if route = @routes.find{|route| route.route_number == r_num}
-    else return puts "Неверно выбран номер Маршрута"
+    if r_num > @routes.length || r_num <= 0
+      return puts "Неверно выбран номер Маршрута"
+    else
+      route = @routes[r_num - 1]
+      p route
     end
 
-    puts "Выберите станцию для добавления в Маршрут:"      
-    st = gets.chomp.to_s
-    if route.stations.find{|station| station.name == st}
+    puts "Выберите Станцию из списка для добавления в Маршрут:"
+
+    @station_list.each_with_index do |station, index|
+      puts "   #{index + 1}:  #{station.name}"
+    end
+
+    st = gets.chomp.to_i
+    if route.stations.find{|station| station == @station_list[st - 1]}
       return puts "Такая станция уже есть в Маршруте #{r_num}"
-    elsif station = @station_list.find{|station| station.name == st}      
-    else return puts "Неверно выбрано название станции"
-    end
-
-    route.stations.insert(-2, station)
+    elsif
+      station = @station_list[st - 1]
+      route.stations.insert(-2, station)
+    else
+      return puts "Неверно выбрано название станции"
+    end    
     
     p route.stations
   end
@@ -200,58 +216,101 @@ class Main
   # 6 - Удаляем станцию из маршрута
   def delete_station
 
-    puts "Укажите номер Маршрута:"
+    puts "Выберите номер Маршрута из списка:"
+
+    @routes.each_with_index do |route, index|
+      puts "  #{index + 1}:  #{route.stations.first.name} - #{route.stations.last.name}"
+    end
+
     r_num = gets.chomp.to_i
-    if route = @routes.find{|route| route.route_number == r_num}
-      puts "Выберите станцию для удаления из Маршрута:"
-    else return puts "Неверно выбран номер Маршрута"
+    if r_num > @routes.length || r_num <= 0
+      return puts "Неверно выбран номер Маршрута"
+    else
+      route = @routes[r_num - 1]
+      p route
     end
-          
-    st = gets.chomp.to_s
-    if station = route.stations.find{|station| station.name == st}
+
+    puts "Выберите Станцию из списка для удаления из Маршрута #{r_num}:"
+
+    route.stations.each_with_index do |station, index|
+      puts "   #{index + 1}:  #{station.name}"
+    end
+
+    st = gets.chomp.to_i
+    if st > route.stations.length || st <= 0
+      return puts "Такой Станции нет в Маршруте #{r_num}"
+    else
+      station = route.stations[st - 1]
       route.stations.delete(station)
-    else station = route.stations.find{|station| station.name != st}
-      return puts "Такой станции нет в Маршруте #{r_num}"
-    end
+    end    
     
     p route.stations
   end
 
   # 7 - Назначаем маршрут поезду
   def assign_route
-    puts "Выберите номер Поезда для назначения Маршрута:"
+
+    puts "Выберите Поезд по номеру списка для назначения Маршрута:"
+
+    @trains.each_with_index do |train, index|
+      puts "   #{index + 1}:   #{train.number} тип #{train.type}"
+    end  
+    
     num = gets.chomp.to_i
 
-    if train = @trains.find{|train| train.number == num}
-      puts "Чтобы выбрать Маршрут для Поезда № #{num} выберите Станцию отправления и Станцию назначения.
-    Станция отправления:"
-    else return puts "Неверно выбран номер поезда"
+    if num > @trains.length || num <= 0
+      return puts "Неверно выбран номер Поезда"
+    else
+      train = @trains[num - 1]
     end
 
-    st1 = gets.chomp.to_s
-    puts "    Станция назначения:"
-    st2 = gets.chomp.to_s
+    puts "Выберите номер Маршрута из списка:"
 
-    if st1 == @route.stations.first.name && st2 == @route.stations.last.name
-      train.get_route(@route)
-    else return puts "Такого маршрута нет"
+    @routes.each_with_index do |route, index|
+      puts "  #{index + 1}:  #{route.stations.first.name} - #{route.stations.last.name}"
     end
+
+    r_num = gets.chomp.to_i
+    if r_num > @routes.length || r_num <= 0
+      return puts "Неверно выбран номер Маршрута"
+    else
+      route = @routes[r_num - 1]
+      train.get_route(route)
+    end
+
     p train
+
   end
 
   # 8 - Добавляем вагон к поезду
   def add_wagon
-    puts "Выберите номер Поезда к которому надо добавить Вагон:"
+
+    puts "Выберите Поезд по номеру к которому надо добавить Вагон::"
+
+    @trains.each_with_index do |train, index|
+      puts "   #{index + 1}:   #{train.number} тип #{train.type}"
+    end  
+    
     num = gets.chomp.to_i
 
-    if train = @trains.find{|train| train.number == num}
-      puts "Укажите номер Вагона для добавления к Поезду № #{num}:"
-    else return puts "Такого поезда нет в списке"
+    if num > @trains.length || num <= 0
+      return puts "Неверно выбран номер Поезда"
+    else
+      train = @trains[num - 1]
+    end
+
+    puts "Выберите номер Вагона из списка для добавления к Поезду № #{num}:"
+
+    @wagon_list.each_with_index do |wagon, index|
+      puts "   #{index + 1}:   #{wagon.number} тип #{wagon.type}"
     end
 
     wag = gets.chomp.to_i
-    if wagon = @wagon_list.find{|wagon| wagon.number == wag}
-    else return puts "Такого Вагона нет в списке"
+
+    if wag > @wagon_list.length || wag <= 0
+      return puts "Неверно выбран номер Вагона"
+    else
+      wagon = @wagon_list[wag - 1]
     end
 
     if train.type != wagon.type
@@ -264,31 +323,54 @@ class Main
 
   # 9 - Отцепляем вагон от поезда
   def unpin_wagon
-    puts "Выберите номер Поезда от которого надо отцепить Вагон:"
+
+    puts "Выберите Поезд по номеру от которого надо отцепить Вагон:"
+
+    @trains.each_with_index do |train, index|
+      puts "   #{index + 1}:   #{train.number} тип #{train.type}"
+    end  
+    
     num = gets.chomp.to_i
 
-    if train = @trains.find{|train| train.number == num}
-      puts "Укажите номер Вагона для отцепления от Поезда № #{num}:"
-    else return puts "Такого поезда нет в списке"
+    if num > @trains.length || num <= 0
+      return puts "Неверно выбран номер Поезда"
+    else
+      train = @trains[num - 1]
+    end
+
+    puts "Выберите номер Вагона из списка для отцепления от Поезда № #{num}:"
+
+    train.wagons.each_with_index do |wagon, index|
+      puts "   #{index + 1}:   #{wagon.number} тип #{wagon.type}"
     end
 
     wag = gets.chomp.to_i
-    if wagon = train.wagons.find{|wagon| wagon.number == wag}
-      train.wagons.delete wagon
-    else return puts "Такого Вагона нет в списке"
-    end
+
+    if wag > train.wagons.length || wag <= 0
+      return puts "Неверно выбран номер Вагона"
+    else
+      wagon = train.wagons[wag - 1]
+      train.wagons.delete(wagon)
+    end    
 
     p train
   end
 
   # 10 - Двигаем поезд вперёд на 1 станцию
   def move_forward
-    puts "Выберите номер Поезда который надо отправить вперёд по Маршруту:"
+    puts "Выберите Поезд для продвижения вперёд:"
+
+    @trains.each_with_index do |train, index|
+      puts "   #{index + 1}:   #{train.number} тип #{train.type}"
+    end  
+    
     num = gets.chomp.to_i
 
-    if train = @trains.find{|train| train.number == num}
+    if num > @trains.length || num <= 0
+      return puts "Неверно выбран номер Поезда"
+    else
+      train = @trains[num - 1]
       train.move_forward
-    else return puts "Такого поезда нет в списке"
     end
 
     p train
@@ -296,12 +378,19 @@ class Main
 
   # 11 - Двигаем поезд назад на 1 станцию
   def return_back
-    puts "Выберите номер Поезда который надо отправить назад по Маршруту:"
+    puts "Выберите Поезд для возвращения назад:"
+
+    @trains.each_with_index do |train, index|
+      puts "   #{index + 1}:   #{train.number} тип #{train.type}"
+    end  
+    
     num = gets.chomp.to_i
 
-    if train = @trains.find{|train| train.number == num}
+    if num > @trains.length || num <= 0
+      return puts "Неверно выбран номер Поезда"
+    else
+      train = @trains[num - 1]
       train.return_back
-    else return puts "Такого поезда нет в списке"
     end
 
     p train
@@ -309,22 +398,39 @@ class Main
 
   # 12 - Список станций в Маршруте
   def all_stations
-    puts "Укажите номер Маршрута:"
+
+    puts "Выберите номер Маршрута из списка:"
+
+    @routes.each_with_index do |route, index|
+      puts "  #{index + 1}:  #{route.stations.first.name} - #{route.stations.last.name}"
+    end
+
     r_num = gets.chomp.to_i
-    if route = @routes.find{|route| route.route_number == r_num}
+    if r_num > @routes.length || r_num <= 0
+      return puts "Неверно выбран номер Маршрута"
+    else
+      route = @routes[r_num - 1]
       puts route.stations
-    else return puts "Неверно выбран номер Маршрута"
     end
   end
 
   # 13 - Список поездов на Станции
   def train_list
-    puts "Выберите Станцию для демонстрации Списка Поездов:"      
-    st = gets.chomp.to_s
-    if station = @station_list.find{|station| station.name == st}
-      station.train_list
-    else return puts "Неверно выбрано название станции"
+
+    puts "Выберите Станцию из списка для просмотра поездов на ней:"
+
+    @station_list.each_with_index do |station, index|
+      puts "   #{index + 1}:   #{station.name}"
     end
+
+    st = gets.chomp.to_i
+
+    if st > @station_list.length || st <= 0
+      return puts "Неверно выбран номер Станции"
+    else
+      station = @station_list[st - 1]
+      station.train_list
+    end    
   end
 end
 
