@@ -1,4 +1,3 @@
-
 require_relative 'manufacturer.rb'
 require_relative 'counter.rb'
 
@@ -7,18 +6,12 @@ class Train
   include Manufacturer
   include InstanceCounter
 
-  @@find = {}
+  @@train_hesh = {}
 
   def self.find(number)
+
+    puts @@train_hesh[number]
     
-    @@find.each do |key, value|
-      if key == number
-        puts value
-      else
-        key != number
-        puts nil
-      end
-    end
   end
 
   attr_accessor :speed
@@ -29,7 +22,7 @@ class Train
     @type = type
     @wagons = []
     @speed = 0
-    @@find[number] = self
+    @@train_hesh[number] = self
     register_instance
   end
 

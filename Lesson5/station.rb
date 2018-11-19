@@ -1,4 +1,3 @@
-
 require_relative 'train.rb'
 require_relative 'counter.rb'
 
