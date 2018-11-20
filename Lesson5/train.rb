@@ -10,7 +10,7 @@ class Train
 
   def self.find(number)
 
-    puts @@train_hesh[number]
+    @@train_hesh[number]
     
   end
 
