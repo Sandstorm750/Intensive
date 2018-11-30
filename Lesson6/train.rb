@@ -24,25 +24,22 @@ class Train
     @type = type
     @wagons = []
     @speed = 0
+    validate!
     @@train_hesh[number] = self
-    register_instance
-    validate!
+    register_instance    
   end
 
-  def valid?
-    validate!
+  def valid
+    validate != true
   rescue
-    false
+    puts "Неверно задан формат поезда"
   end
 
-  def validate!
-    raise "Number can't be nil." if number.nil?
+  def validate!    
     raise "Enter the number in the format '000-XX'." if number.length != 6
     raise "Number has invalid format." if number !~ TRAIN_NUMBER_FORMAT
     true
-    puts "Создан поезд № #{number}"
-  rescue
-    return puts "Номер набран в неправильном формате"
+    puts "Создан поезд № #{number}"    
   end
 
   def stop
