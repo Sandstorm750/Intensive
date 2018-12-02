@@ -20,6 +20,8 @@ class Wagon
     false
   end
 
+  protected
+
   def validate!
     raise "Number can't be nil." if number.nil?
     raise "Enter the number in the format '00'." if number.length != 2

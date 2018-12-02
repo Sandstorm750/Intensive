@@ -78,50 +78,59 @@ class Main
   # 1 - Создаём поезд
   def create_train
     #byebug
-    puts "Введите номер поезда:"
-    number = gets.chomp.to_s
 
-    if @trains.find {|train| train.number == number}
-      return puts "Поезд с таким номером уже был создан ранее"
+    begin
+      puts "Введите номер поезда:"
+      number = gets.chomp.to_s
+
+      if @trains.find {|train| train.number == number}
+        return puts "Поезд с таким номером уже был создан ранее"
+      end
+
+      puts "Выберите номер типа поезда:
+      1. Грузовой
+      2. Пассажирский"
+      type = gets.chomp.to_i
+
+      if type == 1
+        @trains << CargoTrain.new(number, :cargo)
+      elsif type == 2
+        @trains << PassengerTrain.new(number, :passenger)
+      else 
+        return puts "Неверно указан тип поезда."
+      end
+    
+    rescue RuntimeError => e
+      puts "#{e.message} Try again."
+      retry
     end
-
-    puts "Выберите номер типа поезда:
-    1. Грузовой
-    2. Пассажирский"
-    type = gets.chomp.to_i
-
-    if type == 1
-      @trains << CargoTrain.new(number, :cargo)
-    elsif type == 2
-      @trains << PassengerTrain.new(number, :passenger)
-    else 
-      return puts "Неверно указан тип поезда."
-    end
-
-    # if @trains.find {|train| train.valid? == true}
-    #   puts "Создан поезд № #{number}"
-    # end
   end
 
   # 2 - Создаём вагон
   def create_wagon
-    puts "Введите номер вагона:"
-    number = gets.chomp.to_s
+    begin
+      puts "Введите номер вагона:"
+      number = gets.chomp.to_s
 
-    if @wagon_list.find {|wagon| wagon.number == number}
-      return puts "Вагон с таким номером уже был создан ранее"
-    end
+      if @wagon_list.find {|wagon| wagon.number == number}
+        return puts "Вагон с таким номером уже был создан ранее"
+      end
 
-    puts "Выберите номер типа вагона:
-    1. Грузовой
-    2. Пассажирский"
-    type = gets.chomp.to_i
+      puts "Выберите номер типа вагона:
+      1. Грузовой
+      2. Пассажирский"
+      type = gets.chomp.to_i
 
-    if type == 1
-      @wagon_list << CargoWagon.new(number, :cargo)
-    elsif type == 2
-      @wagon_list << PassengerWagon.new(number, :passenger)
-    else return puts "Неверно указан тип вагона."
+      if type == 1
+        @wagon_list << CargoWagon.new(number, :cargo)
+      elsif type == 2
+        @wagon_list << PassengerWagon.new(number, :passenger)
+      else return puts "Неверно указан тип вагона."
+      end
+
+    rescue RuntimeError => e
+      puts "#{e.message} Попробуйте снова."
+      retry
     end
 
     p @wagon_list
@@ -129,18 +138,22 @@ class Main
 
   # 3 - Создаём станцию
   def create_station
-    puts "Введите название станции:"
-    name = gets.chomp.to_s
+    begin
+      puts "Введите название станции:"
+      name = gets.chomp.to_s
 
-    if @station_list.find {|station| station.name == name}
-    return puts "Станция с таким названием уже существует"
-    elsif name == ""
-      return puts "Название станции не введено"
-    else
-      @station_list << Station.new(name)
-    end    
+      if @station_list.find {|station| station.name == name}
+        return puts "Станция с таким названием уже существует"
+      else
+        @station_list << Station.new(name)
+      end
+
+    rescue RuntimeError => e
+      puts "#{e.message} Try again."
+      retry
+    end
     
-    puts @station_list
+    p @station_list
   end
 
   # 4 - Создаём маршрут

@@ -17,27 +17,27 @@ class Train
   attr_accessor :speed
   attr_reader :number, :type, :wagons
 
-  TRAIN_NUMBER_FORMAT = /^\d{3}-[A-ZА-Я]{2}$/
+  TRAIN_NUMBER_FORMAT =/^\d{3}-[а-яa-z]{2}$/i
 
   def initialize(number, type)
     @number = number
+    validate!
     @type = type
     @wagons = []
-    @speed = 0
-    validate!
+    @speed = 0    
     @@train_hesh[number] = self
     register_instance    
   end
 
-  def valid
-    validate != true
+  def valid?
+    validate!
   rescue
-    puts "Неверно задан формат поезда"
+    false
   end
 
   def validate!    
-    raise "Enter the number in the format '000-XX'." if number.length != 6
-    raise "Number has invalid format." if number !~ TRAIN_NUMBER_FORMAT
+    raise "Введите номер поезда в формате '111-AA'." if number.length != 6
+    raise "Номер имеет недопустимый формат." if number !~ TRAIN_NUMBER_FORMAT
     true
     puts "Создан поезд № #{number}"    
   end
