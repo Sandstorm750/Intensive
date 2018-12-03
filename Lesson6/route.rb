@@ -5,12 +5,11 @@ class Route
 
   include InstanceCounter
 
-  attr_reader :station, :stations, :route_number
+  attr_reader :station, :stations
 
   def initialize(departure_station, destination_station)
-    if departure_station.class == Station && destination_station.class == Station
-      @stations = [departure_station, destination_station]
-    end
+    @stations = [departure_station, destination_station]
+    validate!
     register_instance
   end
 
@@ -28,6 +27,17 @@ class Route
 
   def stations
     @stations
+  end
+
+  def valid?
+    validate!
+  rescue
+    false
+  end
+
+  def validate!
+    raise "Вы выбрали не станцию" if @stations.all? {|st| st.is_a?(Station)} != true
+    true        
   end
 end
 

@@ -6,11 +6,11 @@ class Train
   include Manufacturer
   include InstanceCounter
 
-  @@train_hesh = {}
+  @@train_hash = {}
 
   def self.find(number)
 
-    @@train_hesh[number]
+    @@train_hash[number]
     
   end
 
@@ -21,12 +21,12 @@ class Train
 
   def initialize(number, type)
     @number = number
-    validate!
     @type = type
     @wagons = []
-    @speed = 0    
-    @@train_hesh[number] = self
-    register_instance    
+    @speed = 0
+    validate!
+    @@train_hash[number] = self
+    register_instance
   end
 
   def valid?
@@ -38,8 +38,7 @@ class Train
   def validate!    
     raise "Введите номер поезда в формате '111-AA'." if number.length != 6
     raise "Номер имеет недопустимый формат." if number !~ TRAIN_NUMBER_FORMAT
-    true
-    puts "Создан поезд № #{number}"    
+    true        
   end
 
   def stop

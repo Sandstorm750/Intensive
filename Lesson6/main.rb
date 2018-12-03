@@ -99,6 +99,8 @@ class Main
       else 
         return puts "Неверно указан тип поезда."
       end
+
+      puts "Создан поезд № #{number}"
     
     rescue RuntimeError => e
       puts "#{e.message} Try again."
