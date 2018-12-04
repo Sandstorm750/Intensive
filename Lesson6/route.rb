@@ -36,7 +36,7 @@ class Route
   end
 
   def validate!
-    raise "Вы выбрали не станцию" if @stations.all? {|st| st.is_a?(Station)} != true
+    raise "Вы выбрали не станцию" unless @stations.all? {|st| st.is_a?(Station)}
     true        
   end
 end
