@@ -15,7 +15,7 @@ class Train
   attr_accessor :speed
   attr_reader :number, :type, :wagons
 
-  TRAIN_NUMBER_FORMAT = /^\d{3}-[а-яa-z]{2}$/i.freeze
+  TRAIN_NUMBER_FORMAT = /^\d{3}-[а-яa-z]{2}$/i
 
   def initialize(number, type)
     @number = number

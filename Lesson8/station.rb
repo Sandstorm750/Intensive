@@ -13,7 +13,7 @@ class Station
     @@station_list
   end
 
-  NAME_FORMAT = /[a-zA-Z]{3,}/x.freeze
+  NAME_FORMAT = /[a-zA-Z]{3,}/x
 
   def initialize(name)
     @name = name

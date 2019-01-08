@@ -5,8 +5,7 @@ class Wagon
 
   attr_accessor :number, :type
 
-  WAGON_NUMBER_FORMAT = /^\d{2}$/.freeze
-
+  WAGON_NUMBER_FORMAT = /^\d{2}$/
   def initialize(number, type)
     @number = number
     @type = type
